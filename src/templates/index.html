@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>ethmsg - Store encrypted authoritative messages on the blockchain</title>
+        <meta name="description" content="Store encrypted authoritative messages on the blockchain">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <div id="app"></div>
+        <footer>Copyright 2017 <a href="https://www.mikeshultz.com/" onclick="window.open(this.href); return false;">Mike Shultz</a>. Ethmsg is <a href="https://github.com/mikeshultz/ethmsg" onclick="window.open(this.href); return false;">open source software</a> released under the GPL 3.0 license.</footer>
+        <!-- multihashes -->
+        <script type="text/javascript" src="http://localhost:8080/ipfs/QmfKgo6AnCcd5nLvmeyBeHfFd1zy1jShQE7Kgxbnai7YzR"></script>
+        <!-- web3.js -->
+        <script type="text/javascript" src="http://localhost:8080/ipfs/QmbhhDsjXocw6CpcR3rBCdHXSwXpgA9caVP7uU5fptF9QG"></script>
+        <!-- Load JS bootstrapper -->
+        <script>
+            (function() {
+
+                const hexToQm = (hsh) => {
+                    return Multihashes.toB58String(Multihashes.fromHexString(hsh));
+                }
+
+                // TODO: Make these configurable?
+                const JSONRPC_ROOT = 'http://localhost:8545/'
+                //const IPFS_ROOT = 'https://ipfs.infura.io/ipfs/';
+                const IPFS_ROOT = 'http://127.0.0.1:8080/ipfs/';
+                const ROUTER_ADDRESS = '0x4697d6186deb9da273a32b5b5ad649cb76b81bbe';
+                const ROUTER_ABI = [{"constant": true,"inputs": [],"name": "next","outputs": [{"name": "","type": "address"}],"payable": false,"stateMutability": "view","type": "function"}, {"constant": true,"inputs": [{"name": "name","type": "string"}],"name": "getAddress","outputs": [{"name": "","type": "bytes32"}, {"name": "","type": "address"}],"payable": false,"stateMutability": "view","type": "function"}, {"constant": true,"inputs": [{"name": "name","type": "string"}],"name": "getAsset","outputs": [{"name": "","type": "bytes32"}],"payable": false,"stateMutability": "view","type": "function"}, {"payable": false,"stateMutability": "nonpayable","type": "fallback"}, {"anonymous": false,"inputs": [{"indexed": false,"name": "name","type": "string"}, {"indexed": false,"name": "ipfsHash","type": "bytes32"}],"name": "NewAsset","type": "event"}, {"anonymous": false,"inputs": [{"indexed": false,"name": "name","type": "string"}, {"indexed": false,"name": "abiHash","type": "bytes32"}, {"indexed": false,"name": "targetAddress","type": "address"}],"name": "NewAddress","type": "event"}, {"anonymous": false,"inputs": [{"indexed": false,"name": "sender","type": "address"}],"name": "Denied","type": "event"}];
+                //const HASH_BOOTSTRAP = 'QmTWfVWL8EUWW2R7EGQpXdq8ddtffupkTDzk6JzqPQH8Rn';
+                const MULTIHASHES = 'QmfKgo6AnCcd5nLvmeyBeHfFd1zy1jShQE7Kgxbnai7YzR';
+
+                window.addEventListener('load', async () => {
+                    console.log('init');
+                    const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
+
+                    const router = web3.eth.contract(ROUTER_ABI).at(ROUTER_ADDRESS);
+                    const messageStoreAddress = await router.methods.getAddress('messagestore').call();
+                    const bootstrapHash = await router.methods.getAsset('bootstrap').call();
+                    const bootstrapQmHash = hexToQm(bootstrapHash);
+
+                    let bootstrapper = document.createElement('script');
+                    bootstrapper.src = IPFS_ROOT + bootstrapQmHash;
+                    document.head.appendChild(bootstrapper);
+
+                    //window.etherep = new Etherep(byid('app'));
+                });
+            })();
+        </script>
+    </body>
+</html>

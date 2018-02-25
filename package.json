@@ -1,0 +1,24 @@
+{
+  "name": "ethmsg",
+  "version": "0.0.1",
+  "description": "An Ethereum based message drop",
+  "repository": "https://github.com/mikeshultz/ethmsg",
+  "author": "Mike Shultz <mike@mikeshultz.com>",
+  "license": "GPLv3",
+  "dependencies": {
+    "identicon.js": "^2.3.1",
+    "multihashes": "^0.4.13",
+    "web3": "^1.0.0-beta.30",
+    "web3-redux": "^0.5.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-css": "^0.1.0",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.0"
+  }
+}
